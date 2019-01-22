@@ -1,4 +1,4 @@
-name := "InClass"
+name := "CSCI1321-S19"
 version := "1.0"
 scalaVersion := "2.12.8"
 
