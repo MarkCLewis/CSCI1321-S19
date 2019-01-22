@@ -1,4 +1,4 @@
-package basics
+package section3.basics
 
 class Entity(  
     private var x: Double,

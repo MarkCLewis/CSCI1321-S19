@@ -2,6 +2,7 @@ package basics
 
 import org.junit.Test
 import org.junit.Assert._
+import section2.basics.HelloWorld
 
 class TestHelloWorld {
   @Test def testSquare(): Unit = {

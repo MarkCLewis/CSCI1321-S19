@@ -1,4 +1,4 @@
-package basics
+package section2.basics
 
 /**
 This is a basic main for you to start off with.

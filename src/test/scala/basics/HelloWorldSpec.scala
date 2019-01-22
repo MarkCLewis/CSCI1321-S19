@@ -1,6 +1,7 @@
 package basics
 
 import org.scalatest._
+import section2.basics.HelloWorld
 
 class HelloWorldSpec extends FlatSpec with Matchers {
   "square" should "return 4 when called on 2" in {
