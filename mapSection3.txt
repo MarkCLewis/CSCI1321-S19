@@ -1,0 +1,19 @@
+3
+CSI 388
+A dimly lit room with glowing monitors.
+2
+chair
+A place to sit.
+computer
+It isn't clear if this is working today.
+-1,-1,-1,1,-1,-1
+Hallway
+Connects places.
+0
+-1,-1,0,2,-1,-1
+Broadway
+Another big hall.
+1
+table
+Where student put stuff.
+-1,-1,-1,1,-1,-1
