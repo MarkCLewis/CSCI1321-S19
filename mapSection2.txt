@@ -1,0 +1,19 @@
+3
+CSI 257
+You are in a dimly lit room with the glow of monitors and the feel of oppression in the air.
+2
+chair
+Something to sit on.
+computer
+This is your tool for world domination.
+-1,1,-1,-1,-1,-1
+Hall
+This connects rooms in modern buildings.
+0
+0,-1,2,-1,-1,-1
+Broadway
+A bigger hall.
+1
+table
+A place to put stuff.
+-1,-1,-1,1,-1,-1
