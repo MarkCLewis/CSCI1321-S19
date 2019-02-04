@@ -1,5 +1,5 @@
 package section2.drmario
 
-class Pill {
-  
+class Pill extends BoardElement {
+  def cells: List[Cell] = ???
 }
