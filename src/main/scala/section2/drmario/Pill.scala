@@ -1,5 +1,7 @@
 package section2.drmario
 
-class Pill extends BoardElement {
-  def cells: List[Cell] = ???
+class Pill(val cells: List[PillPiece]) extends BoardElement {
+  def fall(): Pill = {
+    new Pill(cells.map(pp => pp.fall()))
+  }
 }
