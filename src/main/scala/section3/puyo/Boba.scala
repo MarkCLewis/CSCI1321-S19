@@ -5,5 +5,5 @@ trait Boba {
   def y: Int
   def color: PuyoColor.Value
   
-  def fall(): Boba
+  def move(dx: Int, dy: Int): Boba
 }
