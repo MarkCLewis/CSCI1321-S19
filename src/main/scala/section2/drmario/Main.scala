@@ -30,6 +30,15 @@ object Main extends JFXApp {
           case _ =>
         }
       }
+      onKeyReleased = (ke: KeyEvent) => {
+        ke.code match {
+          case KeyCode.Up => board.upReleased()
+          case KeyCode.Down => board.downReleased()
+          case KeyCode.Left => board.leftReleased()
+          case KeyCode.Right => board.rightReleased()
+          case _ =>
+        }
+      }
 
       var lastTime = -1L
       val timer = AnimationTimer(time => {
