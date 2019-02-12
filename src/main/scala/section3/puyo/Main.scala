@@ -9,8 +9,8 @@ import scalafx.scene.input.KeyEvent
 import scalafx.scene.input.KeyCode
 
 object Main extends JFXApp {
-  val canvasWidth = 6 * Renderer.CellSize
-  val canvasHeight = 12 * Renderer.CellSize
+  val canvasWidth = Board.Width * Renderer.CellSize
+  val canvasHeight = Board.Height * Renderer.CellSize
   stage = new JFXApp.PrimaryStage {
     title = "Puyo"
     scene = new Scene(canvasWidth, canvasHeight) {
