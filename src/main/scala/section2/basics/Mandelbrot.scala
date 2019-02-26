@@ -15,7 +15,7 @@ object Mandelbrot extends JFXApp {
   private var ymin = -1.0
   private var ymax = 1.0
   
-  val maxCount = 10000
+  val maxCount = 1000
   def mandelCount(c: Complex): Int = {
     var z = new Complex(0, 0)
     var cnt = 0
@@ -37,9 +37,9 @@ object Mandelbrot extends JFXApp {
   def drawMandelbrot(img: WritableImage): Unit = {
     val writer = img.pixelWriter
     val start = System.nanoTime()
-    for (j <- 0 until img.height().toInt) {
+    for (j <- (0 until img.height().toInt).par) {
       val y = pixelToY(j, img)
-      for (i <- 0 until img.width().toInt) {
+      for (i <- (0 until img.width().toInt).par) {
         val x = pixelToX(i, img)
         val cnt = mandelCount(new Complex(x, y))
         val color = colorFromCount(cnt)
