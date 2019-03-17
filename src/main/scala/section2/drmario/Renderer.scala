@@ -10,7 +10,7 @@ class Renderer(gc: GraphicsContext) {
     gc.fill = Color.Black
     gc.fillRect(0, 0, Main.boardWidth, Main.boardHeight)
     
-    for(be <- board.currentPill :: board.elements; cell <- be.cells) {
+    for(be <- (if (board.drawCurrent) List(board.currentPill) else Nil) ::: board.elements; cell <- be.cells) {
       cell.color match {
         case DrMarioColor.Red => gc.fill = Color.Red
         case DrMarioColor.Yellow => gc.fill = Color.Yellow

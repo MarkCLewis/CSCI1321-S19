@@ -6,5 +6,4 @@ trait Cell {
   def color: DrMarioColor.Value
 
   def supported(): Boolean
-
 }
