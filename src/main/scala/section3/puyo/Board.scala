@@ -33,7 +33,7 @@ class Board {
     if (checkSupport) {
       if (moveDelay > moveInterval) {
         val fastGrid = Array.fill(Board.Width, Board.Height)(None: Option[Boba])
-        for (b <- bobas) fastGrid(b.x)(b.y) = Some(b)
+        for (b <- bobas; if b.y >= 0) fastGrid(b.x)(b.y) = Some(b)
         if (!dropUnsupported(fastGrid)) {
           if (!checkRemoveByColor(fastGrid)) {
             checkSupport = false
