@@ -59,6 +59,11 @@ class Board {
       }
     }
   }
+  
+  def makePassable(): PassableBoard = {
+    PassableBoard(elements.flatMap(_.cells.map(_.makePassable())), drawCurrent,
+        currentPill.cells(0).makePassable(), currentPill.cells(1).makePassable())
+  }
 
   def dropPill(): Unit = {
     if (currentPill.canMove(0, 1, isClear)) {

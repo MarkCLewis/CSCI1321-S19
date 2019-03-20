@@ -1,8 +1,11 @@
 package section3.puyo
 
 import collection.mutable
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import java.net.Socket
 
-class Board {
+class Board(sock: Socket, in: ObjectInputStream, out: ObjectOutputStream) {
   private var _bobas = List.tabulate[Boba](6)(i => new Jelly(i, 11))
   private var _current = new Twoyo(
     new Puyo(2, -1, PuyoColor.random()),
@@ -15,6 +18,25 @@ class Board {
   private var leftHeld = false
   private var rightHeld = false
   private var checkSupport = false
+  /*
+            ke.code match {
+          case KeyCode.Up => board.upPressed()
+          case KeyCode.Down => board.downPressed()
+          case KeyCode.Left => board.leftPressed()
+          case KeyCode.Right => board.rightPressed()
+          case _ =>
+        }
+        
+                ke.code match {
+          case KeyCode.Up => board.upReleased()
+          case KeyCode.Down => board.downReleased()
+          case KeyCode.Left => board.leftReleased()
+          case KeyCode.Right => board.rightReleased()
+          case _ =>
+        }
+        
+   * 
+   */
 
   def bobas = _bobas
   def current = _current
@@ -69,6 +91,11 @@ class Board {
       _bobas ::= current.p2
       checkSupport = true
     }
+  }
+  
+  def makePassable(): PassableBoard = {
+    PassableBoard(bobas.map(_.makePassable()), drawCurrent, 
+        current.p1.makePassable(), current.p2.makePassable())
   }
 
   def boardClear(x: Int, y: Int): Boolean = {

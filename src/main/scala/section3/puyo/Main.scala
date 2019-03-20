@@ -17,7 +17,7 @@ object Main extends JFXApp {
       val canvas = new Canvas(canvasWidth, canvasHeight)
       val gc = canvas.graphicsContext2D
       val renderer = new Renderer(gc)
-      val board = new Board
+      val board = new Board(null, null, null)
 
       content = canvas
       
@@ -45,7 +45,8 @@ object Main extends JFXApp {
         if (lastTime != -1) {
           val delay = (time - lastTime) / 1e9
           board.update(delay)
-          renderer.render(board)
+          val pb = board.makePassable()
+          renderer.render(pb)
         }
         lastTime = time
       })

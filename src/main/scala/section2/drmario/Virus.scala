@@ -11,4 +11,6 @@ class Virus(val x: Int, val y: Int, val color: DrMarioColor.Value) extends Cell 
   }
   
   def supported(grid: Array[Array[Option[(BoardElement, Cell)]]]): Boolean = true
+  
+  def style: Int = 0
 }
