@@ -11,14 +11,17 @@ import java.net.Socket
 import scalafx.scene.control.TextInputDialog
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scalafx.application.Platform
 
 object Client extends JFXApp {
   val textDialog = new TextInputDialog("localhost")
   val machine = textDialog.showAndWait().getOrElse("localhost")
   val sock = new Socket(machine, 4040)
-  val in = new ObjectInputStream(sock.getInputStream)
   val out = new ObjectOutputStream(sock.getOutputStream)
-  
+  val in = new ObjectInputStream(sock.getInputStream)
+
   val canvasWidth = Board.Width * Renderer.CellSize
   val canvasHeight = Board.Height * Renderer.CellSize
   stage = new JFXApp.PrimaryStage {
@@ -29,16 +32,22 @@ object Client extends JFXApp {
       val renderer = new Renderer(gc)
 
       content = canvas
-      
+
       onKeyPressed = (ke: KeyEvent) => {
         out.writeObject(KeyPressed(ke.code))
       }
       onKeyReleased = (ke: KeyEvent) => {
         out.writeObject(KeyReleased(ke.code))
       }
-      
-      
-//            renderer.render(pb)
+
+      Future {
+        while (true) {
+          in.readObject() match {
+            case pb: PassableBoard =>
+              Platform.runLater(renderer.render(pb))
+          }
+        }
+      }
     }
   }
 }

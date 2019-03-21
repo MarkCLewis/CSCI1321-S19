@@ -8,7 +8,7 @@ class Renderer(gc: GraphicsContext) {
   
   def render(board: PassableBoard): Unit = {
     gc.fill = Color.Black
-    gc.fillRect(0, 0, Main.boardWidth, Main.boardHeight)
+    gc.fillRect(0, 0, Client.boardWidth, Client.boardHeight)
     
     for(cell <- (if (board.drawCurrent) List(board.pp1, board.pp2) else Nil) ++: board.cells) {
       cell.color match {

@@ -4,6 +4,7 @@ import collection.mutable
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 import java.net.Socket
+import scalafx.scene.input.KeyCode
 
 class Board(sock: Socket, in: ObjectInputStream, out: ObjectOutputStream) {
   private var _bobas = List.tabulate[Boba](6)(i => new Jelly(i, 11))
@@ -18,25 +19,6 @@ class Board(sock: Socket, in: ObjectInputStream, out: ObjectOutputStream) {
   private var leftHeld = false
   private var rightHeld = false
   private var checkSupport = false
-  /*
-            ke.code match {
-          case KeyCode.Up => board.upPressed()
-          case KeyCode.Down => board.downPressed()
-          case KeyCode.Left => board.leftPressed()
-          case KeyCode.Right => board.rightPressed()
-          case _ =>
-        }
-        
-                ke.code match {
-          case KeyCode.Up => board.upReleased()
-          case KeyCode.Down => board.downReleased()
-          case KeyCode.Left => board.leftReleased()
-          case KeyCode.Right => board.rightReleased()
-          case _ =>
-        }
-        
-   * 
-   */
 
   def bobas = _bobas
   def current = _current
@@ -50,7 +32,32 @@ class Board(sock: Socket, in: ObjectInputStream, out: ObjectOutputStream) {
 
   def drawCurrent = !checkSupport
 
-  def update(delay: Double): Unit = {
+  def checkInput(): Unit = {
+    in.readObject() match {
+      case KeyPressed(code) =>
+        code match {
+          case KeyCode.Up => upPressed()
+          case KeyCode.Down => downPressed()
+          case KeyCode.Left => leftPressed()
+          case KeyCode.Right => rightPressed()
+          case _ =>
+        }
+      case KeyReleased(code) =>
+        code match {
+          case KeyCode.Up => upReleased()
+          case KeyCode.Down => downReleased()
+          case KeyCode.Left => leftReleased()
+          case KeyCode.Right => rightReleased()
+          case _ =>
+        }
+    }
+  }
+
+  def sendBoardUpdate(pb: PassableBoard): Unit = {
+    out.writeObject(pb)
+  }
+
+  def update(delay: Double): Boolean = {
     moveDelay += delay
     if (checkSupport) {
       if (moveDelay > moveInterval) {
@@ -66,8 +73,10 @@ class Board(sock: Socket, in: ObjectInputStream, out: ObjectOutputStream) {
             new Puyo(2, 0, PuyoColor.random()))
         }
         moveDelay = 0.0
-      }
+        true
+      } else false
     } else {
+      var somethingMoved = false
       fallDelay += delay
       if (moveDelay > moveInterval) {
         if (leftHeld) _current = current.move(-1, 0, boardClear)
@@ -75,11 +84,14 @@ class Board(sock: Socket, in: ObjectInputStream, out: ObjectOutputStream) {
         if (downHeld) dropTwoyo()
         if (upHeld) _current = current.rotate(boardClear)
         moveDelay = 0.0
+        somethingMoved = true
       }
       if (fallDelay > fallInterval) {
         dropTwoyo()
         fallDelay = 0.0
+        somethingMoved = true
       }
+      somethingMoved
     }
   }
 
@@ -92,10 +104,10 @@ class Board(sock: Socket, in: ObjectInputStream, out: ObjectOutputStream) {
       checkSupport = true
     }
   }
-  
+
   def makePassable(): PassableBoard = {
-    PassableBoard(bobas.map(_.makePassable()), drawCurrent, 
-        current.p1.makePassable(), current.p2.makePassable())
+    PassableBoard(bobas.map(_.makePassable()), drawCurrent,
+      current.p1.makePassable(), current.p2.makePassable())
   }
 
   def boardClear(x: Int, y: Int): Boolean = {

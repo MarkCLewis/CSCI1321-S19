@@ -24,16 +24,21 @@ object Server extends App {
 
   var lastTime = -1L
   while (true) {
-    while(boardQueue.size() > 0) {
-      boards ::= boardQueue.take()
+    while (boardQueue.size() > 0) {
+      val board = boardQueue.take()
+      Future {
+        while (true) board.checkInput()
+      }
+      boards ::= board
     }
     val time = System.nanoTime()
     if (lastTime != -1) {
       val delay = (time - lastTime) / 1e9
       for (board <- boards) {
-        board.update(delay)
-        val pb = board.makePassable()
-        // Send info to clients
+        if (board.update(delay)) {
+          val pb = board.makePassable()
+          board.sendBoardUpdate(pb)
+        }
       }
     }
     lastTime = time

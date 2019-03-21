@@ -9,7 +9,7 @@ class Renderer(gc: GraphicsContext) {
 
   def render(board: PassableBoard): Unit = {
     gc.fill = Color.DarkGreen
-    gc.fillRect(0, 0, Main.canvasWidth, Main.canvasHeight)
+    gc.fillRect(0, 0, Client.canvasWidth, Client.canvasHeight)
 
     for (boba <- board.bobas) {
       drawBoba(boba)

@@ -1,6 +1,7 @@
 package section2.drmario
 
 import collection.mutable
+import scalafx.scene.input.KeyCode
 
 class Board {
   private var _elements = List.tabulate[BoardElement](10)(i =>
@@ -27,7 +28,7 @@ class Board {
   
   def drawCurrent = !checkSupport
 
-  def update(delay: Double): Unit = {
+  def update(delay: Double): Boolean = {
     moveDelay += delay
     if (checkSupport) {
       if (moveDelay > moveInterval) {
@@ -43,8 +44,10 @@ class Board {
             new PillPiece(4, 0, DrMarioColor.random())))
         }
         moveDelay = 0.0
-      }
+        true
+      } else false
     } else {
+      var somethingMoved = false
       fallDelay += delay
       if (moveDelay >= moveInterval) {
         if (leftHeld) _currentPill = currentPill.move(-1, 0, isClear)
@@ -52,11 +55,14 @@ class Board {
         if (downHeld) dropPill()
         if (upHeld) _currentPill = currentPill.rotate(isClear)
         moveDelay = 0.0
+        somethingMoved = true
       }
       if (fallDelay >= fallInterval) {
         dropPill()
         fallDelay = 0.0
+        somethingMoved = true
       }
+      somethingMoved
     }
   }
   
@@ -76,6 +82,19 @@ class Board {
 
   def isClear(x: Int, y: Int): Boolean = {
     x >= 0 && x < Board.Width && y < Board.Height && elements.forall(e => e.cells.forall(c => c.x != x || c.y != y))
+  }
+  
+  def handleKey(obj: AnyRef): Unit = {
+    obj match {
+      case UpPressed => upPressed()
+      case DownPressed => downPressed()
+      case LeftPressed => leftPressed()
+      case RightPressed => rightPressed()
+      case UpReleased => upReleased()
+      case DownReleased => downReleased()
+      case LeftReleased => leftReleased()
+      case RightReleased => rightReleased()
+    }
   }
   
   /**

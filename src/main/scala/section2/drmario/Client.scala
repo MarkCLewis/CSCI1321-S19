@@ -10,19 +10,25 @@ import scalafx.scene.input.KeyCode
 import java.net.Socket
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
+import scalafx.scene.control.TextInputDialog
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+import scalafx.application.Platform
 
 object Client extends JFXApp {
   val boardWidth = 8 * Renderer.CellSize
   val boardHeight = 16 * Renderer.CellSize
 
-  val sock = new Socket("localhost", 4040)
+  val textDialog = new TextInputDialog("localhost")
+  val machine = textDialog.showAndWait().getOrElse("localhost")
+  val sock = new Socket(machine, 4040)
   val out = new ObjectOutputStream(sock.getOutputStream)
   val in = new ObjectInputStream(sock.getInputStream)
 
   val canvas = new Canvas(boardWidth, boardHeight)
   val gc = canvas.graphicsContext2D
   val renderer = new Renderer(gc)
-  
+
   stage = new JFXApp.PrimaryStage {
     title = "Dr. Mario"
     scene = new Scene(boardWidth, boardHeight) {
@@ -47,11 +53,11 @@ object Client extends JFXApp {
         }
       }
 
-      val timer = AnimationTimer { time =>
-        if(in.available() > 0) {
+      Future {
+        while (true) {
           in.readObject() match {
-            case pb:PassableBoard =>
-              renderer.render(pb)
+            case pb: PassableBoard =>
+              Platform.runLater(renderer.render(pb))
           }
         }
       }
