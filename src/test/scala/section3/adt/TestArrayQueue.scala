@@ -1,6 +1,6 @@
 package section3.adt
-import org.junit.Assert._
 
+import org.junit.Assert._
 import org.junit.Test
 
 class TestArrayQueue {
