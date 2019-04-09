@@ -9,29 +9,25 @@ import scala.reflect.ClassTag
 // Alex and Quinn
 class SortedArrayPQ[A: ClassTag](higherPriority: (A, A) => Boolean) extends MyPriorityQueue[A] {
   private var front = 0
-  private var back = 0
   private var arr = Array.fill(10)(null.asInstanceOf[A])
 
   def enqueue(o: A): Unit = {
-    var rover = front
     if (isEmpty) {
       arr(front) = o
-      front += 1
     } else {
-      while (!higherPriority(o, arr(rover-1))) {
+    	var rover = front
+      while (rover > 0 && !higherPriority(o, arr(rover-1))) {
         arr(rover) = arr(rover -1)
         rover -= 1
       }
       arr(rover) = o
     }
-    //    arr(front) = o
-
+    front += 1
   }
   def dequeue(): A = {
-    val ret = arr(front)
-    front += 1
-    ret
+		front -= 1
+    arr(front)
   }
-  def peek: A = arr(front)
-  def isEmpty: Boolean = front == back
+  def peek: A = arr(front-1)
+  def isEmpty: Boolean = front == 0
 }

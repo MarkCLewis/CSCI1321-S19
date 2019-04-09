@@ -8,7 +8,7 @@ class TestPriorityQueue {
 
   @Before
   def init() = {
-    pq = new SortedArrayPQ[Int](_ < _)
+    pq = new UnsortedArrayPriorityQ[Int](_ < _)
   }
 
   @Test
@@ -33,6 +33,7 @@ class TestPriorityQueue {
       assertEquals(n, pq.peek)
       assertEquals(n, pq.dequeue)
     }
+    assertTrue(pq.isEmpty)
   }
   
   @Test
@@ -43,11 +44,13 @@ class TestPriorityQueue {
       assertEquals(n, pq.peek)
       assertEquals(n, pq.dequeue)
     }
+    assertTrue(pq.isEmpty)
     val nums2 = Array.fill(100)(util.Random.nextInt)
     for (n <- nums2) pq.enqueue(n)
     for (n <- nums2.sorted) {
       assertEquals(n, pq.peek)
       assertEquals(n, pq.dequeue)
     }
+    assertTrue(pq.isEmpty)
   }
 }
