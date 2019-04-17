@@ -45,9 +45,24 @@ object Sorts extends App {
   }
   
   def quicksort[A](arr: Array[A])(lt: (A, A) => Boolean): Unit = {
+    def insertionSort(start: Int, end: Int): Unit = {
+      for (i <- start + 1 until end) {
+        var j = i - 1
+        var tmp = arr(i)
+        while (j >= start && lt(tmp, arr(j))) {
+          arr(j + 1) = arr(j)
+          j -= 1
+        }
+        arr(j + 1) = tmp
+      }
+    }
     def helper(start: Int, end: Int): Unit = {
-      if(end-start > 1) {
-        val p = start + util.Random.nextInt(end-start)
+      if (end - start < 13) insertionSort(start, end)
+      else {
+        val mid = (start + end) / 2
+        val p = if(lt(arr(start), arr(mid)) && lt(arr(end-1), arr(start))) start
+          else if(lt(arr(mid), arr(start)) && lt(arr(end-1), arr(mid))) mid
+          else end-1
         val tmp = arr(p)
         arr(p) = arr(start)
         arr(start) = tmp
@@ -75,4 +90,7 @@ object Sorts extends App {
   
   val numList = List.fill(10)(util.Random.nextInt(100))
   println(quicksort(numList)(_ < _))
+  val qnums = Array.fill(100)(util.Random.nextInt(1000))
+  quicksort(qnums)(_ < _)
+  println(qnums.mkString(" "))
 }
